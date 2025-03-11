@@ -22,7 +22,7 @@ public class Tigtagtoe {
     JPanel bordpanel = new JPanel();
     JPanel resetPanel = new JPanel();
 
-    JButton[][] bord = new JButton[3][3];
+    JButton[][] board = new JButton[3][3];
     String playerX = "x";
     String playerO = "o";
     String currentplayer = playerX;
@@ -55,7 +55,7 @@ public class Tigtagtoe {
 
         resetPanel.setLayout(new FlowLayout());
         resetPanel.setBackground(Color.DARK_GRAY);
-        resetButton.setPreferredSize(new Dimension(150, 50));
+        resetButton.setPreferredSize(new Dimension(150, 30));
         resetButton.setBackground(Color.red);
         resetButton.setForeground(Color.white);
         resetButton.setFont(new Font("Arial", Font.BOLD, 30));
@@ -66,7 +66,7 @@ public class Tigtagtoe {
         for (int r = 0; r < 3; r++) {
             for (int c = 0; c < 3; c++) {
                 JButton tile = new JButton();
-                bord[r][c] = tile;
+                board[r][c] = tile;
                 bordpanel.add(tile);
 
                 tile.setBackground(Color.DARK_GRAY);
@@ -77,13 +77,17 @@ public class Tigtagtoe {
 
                 tile.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        if (gameover) return;
-                        JButton tile = (JButton) e.getSource();
-                        if (tile.getText().equals("")) {
-                            tile.setText(currentplayer);
+                        if (!gameover) {
+                            JButton tile = (JButton) e.getSource();
+                            if (tile.getText().equals("")) {
+                                tile.setText(currentplayer);
+                                checkwin();
 
-                            currentplayer = currentplayer.equals(playerX) ? playerO : playerX;
-                            textlabel.setText(currentplayer + "'s turn");
+                                if (!gameover) {
+                                    currentplayer = currentplayer.equals(playerX) ? playerO : playerX;
+                                    textlabel.setText(currentplayer + "'s turn");
+                                }
+                            }
                         }
                     }
                 });
@@ -92,5 +96,38 @@ public class Tigtagtoe {
 
     }
 
-    
+    void  checkwin() {
+        for (int r = 0; r <3; r++) {
+            if (board[r][0].getText().isEmpty()) continue;
+            
+            if (board[r][0].getText().equals(board[r][1].getText()) &&
+            board[r][1].getText().equals(board[r][2].getText())) {
+                gameover = true;
+                for (int c = 0; c < 3; c++) {
+                    colorwiner(board[r][c]);
+                }
+                return;
+            }
+        }
+
+        for (int r = 0; r <3; r++) {
+            if (board[0][r].getText().isEmpty()) continue;
+            
+            if (board[0][r].getText().equals(board[1][r].getText()) &&
+            board[1][r].getText().equals(board[2][r].getText())) {
+                gameover = true;
+                for (int c = 0; c < 3; c++) {
+                    colorwiner(board[c][r]);
+                }
+                return;
+            }
+        }
+    }
+
+    void colorwiner(JButton button) {
+        button.setBackground(Color.GRAY);
+        button.setForeground(Color.green);
+        textlabel.setText("The winer is " + currentplayer);
+    }
+
 }
