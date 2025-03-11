@@ -92,6 +92,18 @@ public class Tigtagtoe {
                     }
                 });
             }
+
+        resetButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                gameover = false;
+                currentplayer = playerX;
+                for (int r = 0; r < 3; r++) {
+                    for (int c = 0; c < 3; c++) {
+                        reset(board[r][c]);
+                    }
+                }
+            }
+        });
         }
 
     }
@@ -102,7 +114,6 @@ public class Tigtagtoe {
             
             if (board[r][0].getText().equals(board[r][1].getText()) &&
             board[r][1].getText().equals(board[r][2].getText())) {
-                gameover = true;
                 for (int c = 0; c < 3; c++) {
                     colorwiner(board[r][c]);
                 }
@@ -115,19 +126,65 @@ public class Tigtagtoe {
             
             if (board[0][r].getText().equals(board[1][r].getText()) &&
             board[1][r].getText().equals(board[2][r].getText())) {
-                gameover = true;
                 for (int c = 0; c < 3; c++) {
                     colorwiner(board[c][r]);
                 }
                 return;
             }
         }
+
+        if (board[0][0].getText().equals(board[1][1].getText()) &&
+            board[1][1].getText().equals(board[2][2].getText()) && !board[0][0].getText().equals("")) {
+                for (int r = 0; r <3; r++) {
+                    colorwiner(board[r][r]);
+                }
+                return;
+        }
+
+        if (board[0][2].getText().equals(board[1][1].getText()) &&
+            board[1][1].getText().equals(board[2][0].getText()) && !board[0][2].getText().equals("")) {
+                for (int r = 2; r >= 0; r--) {
+                    colorwiner(board[2-r][r]);
+                }
+                return;
+        }
+
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+                if (board[r][c].getText().equals("")) {
+                    return;
+                }
+            }
+        }
+        gameover = true;
+        textlabel.setText("Toe");
+        toe();
     }
 
     void colorwiner(JButton button) {
+        gameover = true;
         button.setBackground(Color.GRAY);
         button.setForeground(Color.green);
         textlabel.setText("The winer is " + currentplayer);
     }
 
+    void reset(JButton button) {
+        button.setBackground(Color.DARK_GRAY);
+        button.setText("");
+        button.setForeground(Color.white);
+        textlabel.setText("Tig_tag_toe");
+    }
+
+    void toe() {
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+                colortoe(board[r][c]);
+            }
+        }
+    }
+
+    void colortoe(JButton button) {
+        button.setBackground(Color.yellow);
+        button.setForeground(Color.red);
+    }
 }
